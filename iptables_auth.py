@@ -166,6 +166,17 @@ def cleanup_user_rules():
 
 def init_user_rules():
 	
+	cmd = "iptables -L INPUT --line-numbers -n | grep \"Auth Reject Rule\" | awk '{print $1}'"
+	print( cmd )
+
+	# die schleife muss sein weil die rule nummern sich immer verschieben und man sonst die falsche löscht
+	for i in range( 0 , 1000):
+
+			ret = subprocess.getstatusoutput( cmd )
+			if ret[0] != 0:
+					break
+			print( ret[1] )
+			
 	for p in get_ports()["tcp"]:
 		cmd = "iptables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
 		print( cmd )
