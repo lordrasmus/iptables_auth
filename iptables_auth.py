@@ -1,6 +1,7 @@
 
 import os
 import sys
+import json
 import subprocess
 import argparse
 
@@ -40,7 +41,11 @@ def main():
 
 def get_ports():
 
-	return [82, 139, 445]
+	if not os.path.exists( "/etc/iptables_auth.conf"):
+		return [82, 139, 445]
+	
+	with open('iptables_auth.conf', 'r') as f:
+		data = json.load(f)
 
 
 
