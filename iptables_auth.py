@@ -166,7 +166,7 @@ def cleanup_user_rules():
 
 def init_user_rules():
 	
-	for p in get_ports()["tco"]:
+	for p in get_ports()["tcp"]:
 		cmd = "iptables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
 		print( cmd )
 		os.system( cmd )
