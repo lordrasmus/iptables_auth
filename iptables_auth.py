@@ -145,5 +145,9 @@ def init_user_rules():
 		cmd = "iptables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset".format( p )
 		print( cmd )
 		os.system( cmd )
+		
+		cmd = "ip6tables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset".format( p )
+		print( cmd )
+		os.system( cmd )
 	
 	
