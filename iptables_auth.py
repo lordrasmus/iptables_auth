@@ -99,7 +99,7 @@ def add_user_rules():
 
 	ssh_ip=subprocess.getstatusoutput("who -m --ips | awk '{print $5}'")[1]
 
-	print( "Allow User IP : " + ssh_ip )
+	print( "Allow User IP : " + ssh_ip  + " Ports : " + str( get_ports() ))
 	
 	iptables_rule="iptables {0} -p tcp --dport {1} -s {2} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
 
