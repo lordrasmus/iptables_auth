@@ -42,7 +42,7 @@ def get_ports():
 
 	return [82, 139, 445]
 
-#iptables_rule="iptables {0} -p tcp --dport {1} -s {2} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
+
 
 def del_user_rules():
 	
@@ -90,6 +90,8 @@ def add_user_rules():
 	ssh_ip=subprocess.getstatusoutput("who -m --ips | awk '{print $5}'")[1]
 
 	print( "Allow User IP : " + ssh_ip )
+	
+	iptables_rule="iptables {0} -p tcp --dport {1} -s {2} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
 
 	for p in get_ports():
 			cmd = iptables_rule.format("-I INPUT 1", p, ssh_ip)
