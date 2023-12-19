@@ -6,7 +6,7 @@ import subprocess
 import argparse
 
 
-iptables_rule="iptables {0} -p tcp --dport {1} -s {2} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
+iptables_rule="iptables {0} -p {1} --dport {2} -s {3} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
 
 
 def main():
@@ -110,8 +110,13 @@ def add_user_rules():
 	
 	
 
-	for p in get_ports():
-			cmd = iptables_rule.format("-I INPUT 1", p, ssh_ip)
+	for p in get_ports()["udp"]:
+			cmd = iptables_rule.format("-I INPUT 1", "udp", p, ssh_ip)
+			#print( cmd )
+			os.system( cmd )
+	
+	for p in get_ports()["tcp"]:
+			cmd = iptables_rule.format("-I INPUT 1", "udp", p, ssh_ip)
 			#print( cmd )
 			os.system( cmd )
 
@@ -142,11 +147,11 @@ def cleanup_user_rules():
 def init_user_rules():
 	
 	for p in get_ports():
-		cmd = "iptables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset".format( p )
+		cmd = "iptables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
 		print( cmd )
 		os.system( cmd )
 		
-		cmd = "ip6tables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset".format( p )
+		cmd = "ip6tables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
 		print( cmd )
 		os.system( cmd )
 	
