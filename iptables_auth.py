@@ -11,8 +11,6 @@ iptables_rule="iptables {0} -p tcp --dport {1} -s {2} -j ACCEPT -m comment --com
 
 def main():
 	
-	print("Hello World")
-	
 	iptables_auth = "/usr/local/iptables_auth/repo"
 	
 	parser = argparse.ArgumentParser(description='iptables_auth')
@@ -144,7 +142,8 @@ def cleanup_user_rules():
 def init_user_rules():
 	
 	for p in get_ports():
-		
-		print("iptables -A INPUT -p tcp --dport 139 -j REJECT --reject-with tcp-reset")
+		cmd = "iptables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset".format( p )
+		print( cmd )
+		os.system( cmd )
 	
 	
