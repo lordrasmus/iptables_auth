@@ -44,7 +44,7 @@ def get_ports():
 	if not os.path.exists( "/etc/iptables_auth.conf"):
 		return []
 	
-	with open('iptables_auth.conf', 'r') as f:
+	with open('/etc/iptables_auth.conf', 'r') as f:
 		data = json.load(f)
 		
 	if not "ports" in data:
