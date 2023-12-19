@@ -65,7 +65,7 @@ def get_ports_combined():
 
 def del_rule( ssh_ip, proto , p ):
 
-	print("    Port {0}".format(p))
+	print("    Port {0} {1}".format(proto, p))
 
 	cmd = "iptables -L INPUT --line-numbers -n"
 	#print( cmd )
@@ -97,7 +97,7 @@ def del_rule( ssh_ip, proto , p ):
 
 				iptables_rule="iptables -D INPUT -p {0} --dport {1} -s {2} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
 				cmd2 = iptables_rule.format( proto , p, ssh_ip)
-				print( cmd2 )
+				#print( cmd2 )
 				os.system( cmd2 )
 				
 				break
