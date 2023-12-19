@@ -5,6 +5,10 @@ import json
 import subprocess
 import argparse
 
+
+iptables_rule="iptables {0} -p tcp --dport {1} -s {2} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
+
+
 def main():
 	
 	print("Hello World")
@@ -63,7 +67,7 @@ def del_user_rules():
 	for p in get_ports():
 			print("    Port {0}".format(p))
 
-			cmd = "iptables -L INPUT --line-numbers -n" #  | grep {0} | grep {1} | ".format( p, ssh_ip ) + "awk '{print $1}'"
+			cmd = "iptables -L INPUT --line-numbers -n"
 			#print( cmd )
 
 			# diese schleife muss sein weil das iptabled -D immer nur eine rule löscht
@@ -101,7 +105,7 @@ def add_user_rules():
 
 	print( "Allow User IP : " + ssh_ip  + " Ports : " + str( get_ports() ))
 	
-	iptables_rule="iptables {0} -p tcp --dport {1} -s {2} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
+	
 
 	for p in get_ports():
 			cmd = iptables_rule.format("-I INPUT 1", p, ssh_ip)
