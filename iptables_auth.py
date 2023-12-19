@@ -21,6 +21,7 @@ def main():
 	parser.add_argument('-d', '--delete',  action='store_true', help='delete user ip')
 	parser.add_argument('-a', '--add',     action='store_true', help='add user ip')
 	parser.add_argument('-c', '--cleanup', action='store_true', help='cleanup user rules')
+	parser.add_argument('-i', '--init',    action='store_true', help='init deny rules')
 	
 	args = parser.parse_args()
     
@@ -38,6 +39,10 @@ def main():
 	
 	if args.cleanup:
 		cleanup_user_rules()
+		exit(0)
+	
+	if args.init:
+		init_user_rules()
 		exit(0)
 
 
@@ -135,3 +140,11 @@ def cleanup_user_rules():
 			cmd2 = "iptables -D INPUT {0}".format( rule_numbers[0] )
 			print( cmd2 )
 			os.system( cmd2 )
+
+def init_user_rules():
+	
+	for p in get_ports():
+		
+		print("iptables -A INPUT -p tcp --dport 139 -j REJECT --reject-with tcp-reset")
+	
+	
