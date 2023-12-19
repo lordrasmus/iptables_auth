@@ -152,7 +152,7 @@ def cleanup_user_rules():
 			ret = subprocess.getstatusoutput( cmd )
 			if ret[0] != 0:
 					break
-			print( ret[1] )
+			#print( ret[1] )
 
 			rule_numbers=ret[1].split("\n")
 			#print(rule_numbers)
@@ -175,7 +175,18 @@ def init_user_rules():
 			ret = subprocess.getstatusoutput( cmd )
 			if ret[0] != 0:
 					break
-			print( ret[1] )
+			#print( ret[1] )
+			
+			rule_numbers=ret[1].split("\n")
+			#print(rule_numbers)
+
+			if len( rule_numbers ) <= 0 or len( rule_numbers[0] ) == 0 :
+					break;
+
+			cmd2 = "iptables -D INPUT {0}".format( rule_numbers[0] )
+			print( cmd2 )
+			os.system( cmd2 )
+			
 			
 	for p in get_ports()["tcp"]:
 		cmd = "iptables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
