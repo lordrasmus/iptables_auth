@@ -59,6 +59,9 @@ def get_ports():
 		
 	return data["ports"]
 
+def get_ports_combined():
+	data = get_ports()
+	return list(set(data['udp'] + data['tcp']))
 
 
 def del_user_rules():
@@ -67,7 +70,7 @@ def del_user_rules():
 
 	print( "Delete User IP : " + ssh_ip )
 
-	for p in get_ports():
+	for p in get_ports_combined():
 			print("    Port {0}".format(p))
 
 			cmd = "iptables -L INPUT --line-numbers -n"
@@ -94,7 +97,7 @@ def del_user_rules():
 							  continue
 
 					   cmd2 = iptables_rule.format(" -D INPUT", p, ssh_ip)
-					   #print( cmd2 )
+					   print( cmd2 )
 					   os.system( cmd2 )
 					   break
 
@@ -146,12 +149,21 @@ def cleanup_user_rules():
 
 def init_user_rules():
 	
-	for p in get_ports():
+	for p in get_ports()["tco"]:
 		cmd = "iptables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
 		print( cmd )
 		os.system( cmd )
 		
 		cmd = "ip6tables -A INPUT -p tcp --dport {0} -j REJECT --reject-with tcp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
+		print( cmd )
+		os.system( cmd )
+	
+	for p in get_ports()["udp"]:
+		cmd = "iptables -A INPUT -p udp --dport {0} -j REJECT --reject-with tcp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
+		print( cmd )
+		os.system( cmd )
+		
+		cmd = "ip6tables -A INPUT -p udp --dport {0} -j REJECT --reject-with tcp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
 		print( cmd )
 		os.system( cmd )
 	
