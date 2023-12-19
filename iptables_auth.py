@@ -6,7 +6,7 @@ import subprocess
 import argparse
 
 
-iptables_rule="iptables {0} -p {1} --dport {2} -s {3} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
+
 
 
 def main():
@@ -71,6 +71,7 @@ def del_user_rules():
 	print( "Delete User IP : " + ssh_ip )
 
 	for p in get_ports_combined():
+		
 			print("    Port {0}".format(p))
 
 			cmd = "iptables -L INPUT --line-numbers -n"
@@ -87,19 +88,26 @@ def del_user_rules():
 
 					for l in ret[1].split("\n"):
 
-					   if not "/* Dynamic User Rule */" in l:
+						if not "/* Dynamic User Rule */" in l:
 							  continue
 
-					   if not "{0}".format( p ) in l:
+						if not "{0}".format( p ) in l:
 							  continue
 
-					   if not "{0}".format( ssh_ip ) in l:
+						if not "{0}".format( ssh_ip ) in l:
 							  continue
 
-					   cmd2 = iptables_rule.format(" -D INPUT", p, ssh_ip)
-					   print( cmd2 )
-					   os.system( cmd2 )
-					   break
+						iptables_rule="iptables -D INPUT -p {0} --dport {1} -s {2} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
+						cmd2 = iptables_rule.format( "tcp", p, ssh_ip)
+						print( cmd2 )
+						os.system( cmd2 )
+						
+						iptables_rule="iptables -D INPUT -p {0} --dport {1} -s {2} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
+						cmd2 = iptables_rule.format( "udp", p, ssh_ip)
+						print( cmd2 )
+						os.system( cmd2 )
+						
+						break
 
 
 	sys.exit( 0 )
@@ -112,14 +120,15 @@ def add_user_rules():
 	print( "Allow User IP : " + ssh_ip  + " Ports : " + str( get_ports() ))
 	
 	
+	iptables_rule="iptables -I INPUT 1 -p {0} --dport {1} -s {2} -j ACCEPT -m comment --comment \"Dynamic User Rule\""
 
 	for p in get_ports()["udp"]:
-			cmd = iptables_rule.format("-I INPUT 1", "udp", p, ssh_ip)
+			cmd = iptables_rule.format( "udp", p, ssh_ip)
 			#print( cmd )
 			os.system( cmd )
 	
 	for p in get_ports()["tcp"]:
-			cmd = iptables_rule.format("-I INPUT 1", "udp", p, ssh_ip)
+			cmd = iptables_rule.format("tcp", p, ssh_ip)
 			#print( cmd )
 			os.system( cmd )
 
