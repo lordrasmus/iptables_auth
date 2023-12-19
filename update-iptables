@@ -1,0 +1,30 @@
+#!/usr/bin/python
+
+
+import os
+import sys
+import signal
+
+
+iptables_auth = "/usr/local/iptables_auth/repo"
+
+if not os.path.exists( iptables_auth ):
+    os.system("git clone https://github.com/lordrasmus/iptables_auth.git " + iptables_auth )
+
+
+sys.path.append(iptables_auth)
+
+
+import iptables_auth
+
+
+def signal_handler(sig, frame):
+    print("\nCtrl+C (SIGINT) received.")
+    sys.exit(0)  
+
+# Registriere den Signal-Handler für Ctrl+C (SIGINT)
+signal.signal(signal.SIGINT, signal_handler)
+
+
+if __name__ == '__main__':
+    iptables_auth.main()
