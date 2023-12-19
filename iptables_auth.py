@@ -176,11 +176,11 @@ def init_user_rules():
 		os.system( cmd )
 	
 	for p in get_ports()["udp"]:
-		cmd = "iptables -A INPUT -p udp --dport {0} -j REJECT --reject-with udp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
+		cmd = "iptables -A INPUT -p udp --dport {0} -j DROP  -m comment --comment \"Auth Reject Rule\"".format( p )
 		print( cmd )
 		os.system( cmd )
 		
-		cmd = "ip6tables -A INPUT -p udp --dport {0} -j REJECT --reject-with udp-reset -m comment --comment \"Auth Reject Rule\"".format( p )
+		cmd = "ip6tables -A INPUT -p udp --dport {0} -j DROP -m comment --comment \"Auth Reject Rule\"".format( p )
 		print( cmd )
 		os.system( cmd )
 	
