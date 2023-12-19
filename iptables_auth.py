@@ -63,7 +63,7 @@ def get_ports_combined():
 	data = get_ports()
 	return list(set(data['udp'] + data['tcp']))
 
-def del_rule( proto , p ):
+def del_rule( ssh_ip, proto , p ):
 
 	print("    Port {0}".format(p))
 
@@ -109,11 +109,11 @@ def del_user_rules():
 
 	for p in get_ports()["udp"]:
 		
-		del_rule( "udp", p )
+		del_rule( ssh_ip, "udp", p )
 	
 	for p in get_ports()["tcp"]:
 		
-		del_rule( "tcp", p )
+		del_rule( ssh_ip, "tcp", p )
 		
 			
 
